@@ -239,12 +239,12 @@ Además, visualizamos los mapas de salience para cada bloque convolucional duran
 Para iniciar este proyecto y utilizar los modelos de clasificación de imágenes, sigue estos pasos:
 
 1.  **Clonar el repositorio**:
-    ```bash
-    git clone [https://github.com/Fab16BSB/image_classification.git](https://github.com/Fab16BSB/image_classification.git)
+    ```
+    git clone https://github.com/Fab16BSB/image_classification.git
     ```
 
 2.  **Instalar las dependencias**:
-    ```bash
+    ```
     cd image_classification
     pip install -r requirements.txt
     ```

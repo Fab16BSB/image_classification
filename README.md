@@ -235,12 +235,12 @@ Furthermore, we visualized saliency maps for each convolutional block during the
 To run this project and use the image classification models, follow these steps:
 
 1.  **Clone the repository**:
-    ```bash
-    git clone [https://github.com/Fab16BSB/image_classification.git](https://github.com/Fab16BSB/image_classification.git)
+    ```
+    git clone https://github.com/Fab16BSB/image_classification.git
     ```
 
 2.  **Install dependencies**:
-    ```bash
+    ```
     cd image_classification
     pip install -r requirements.txt
     ```
