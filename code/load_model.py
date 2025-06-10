@@ -25,8 +25,6 @@ import shutil
 from tensorflow.keras.models import model_from_json
 from PIL import Image, ImageDraw, ImageFont
 from tensorflow.keras.preprocessing.image import img_to_array
-from tensorflow.keras import activations
-import matplotlib.pyplot as plt
 
 """## ⚙️ Paths and Parameters for Prediction
 

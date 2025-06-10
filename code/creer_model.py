@@ -67,27 +67,6 @@ epochs = 50                      # Number of training epochs
 batch_size = 16                  # Number of images per training batch
 multi_class = True               # Set to True for multi-class classification
 
-"""## 🧹 Cleaning Up Hidden Checkpoint Directories (Colab Only)
-
-When working on Google Colab, hidden checkpoint directories `.ipynb_checkpoints` may be created inside dataset folders.  
-This step removes those directories from the training and validation data folders to avoid potential issues during training.
-
-The cleanup is performed by the function `remove_hidden_checkpoints_dirs(path)` which deletes the `.ipynb_checkpoints` folder if it exists.
-
-**Note:** Run this cleanup only if you are working on Google Colab.
-
-"""
-
-def remove_hidden_checkpoints_dirs(path):
-    checkpoints_dir = os.path.join(path, '.ipynb_checkpoints')
-    if os.path.isdir(checkpoints_dir):
-        print(f"Remove {checkpoints_dir}")
-        shutil.rmtree(checkpoints_dir)
-
-
-if run_on_colab:
-  remove_hidden_checkpoints_dirs(train_data_dir)
-  remove_hidden_checkpoints_dirs(validation_data_dir)
 
 """## 🏷️ Label Extraction and Data Generator Initialization
 
@@ -564,21 +543,3 @@ def save_complete_model(model, save_path, model_name, labels):
 
 # --- Execution section ---
 save_complete_model(model, path_model, model_name, label_list)
-
-"""## 💾 Downloading the Model Files (Colab Only)
-
-When working on Google Colab, you can use the following commands to download the saved model architecture (`.json`) his weights (`.h5`) and the classes labels (`.txt`) files directly to your local machine.
-
-**Note:** This step is specific to Google Colab environments.
-
-"""
-
-if run_on_colab:
-  from google.colab import files
-
-  # Zip the model directory
-  zip_path = f"{model_name}.zip"
-  shutil.make_archive(model_name, 'zip', os.path.join(path_model,model_name))
-
-  # Download the zip archive
-  files.download(zip_path)
