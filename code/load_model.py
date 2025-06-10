@@ -9,8 +9,7 @@ Original file is located at
 ## 📚 Additional Libraries Import
 
 We import some additional libraries used throughout the project for various purposes:
-- File and directory operations (`os`, `shutil`, `copyfile`)
-- Time-related functions (`time`)
+- File and directory operations (`os`, `shutil`)
 - Numerical computations with arrays (`numpy`)
 - Handling JSON files (`json`)
 - Loading Keras models from JSON (`tensorflow.keras.models.model_from_json`)
@@ -21,11 +20,8 @@ We import some additional libraries used throughout the project for various purp
 """
 
 import os
-import time
 import numpy as np
 import shutil
-from shutil import copyfile
-import json
 from tensorflow.keras.models import model_from_json
 from PIL import Image, ImageDraw, ImageFont
 from tensorflow.keras.preprocessing.image import img_to_array
@@ -231,114 +227,3 @@ def predict_and_annotate_images(model, image_paths, labels, multi_class, predict
 # --- Execution section ---
 predict_image_paths = get_predict_image_paths(predict_data_dir)
 predict_and_annotate_images(model, predict_image_paths, label_list, multi_class, predict_data_dir)
-
-"""## 🔥 Visualizing Saliency Maps for Class-Specific Filters
-
-This section focuses on understanding which parts of an input image influence the model’s prediction the most by:
-
-- Identifying the output layer corresponding to class predictions.
-- Temporarily replacing the softmax activation with a linear activation to facilitate gradient calculation.
-- Computing the saliency map for a specific class filter, which highlights important pixels affecting the prediction.
-- Visualizing this saliency as a heatmap using the 'jet' colormap, enabling intuitive interpretation of model attention.
-
-"""
-
-def find_output_layer_index(model, layer_name="output"):
-    """
-    Find the index of a layer in the Keras model by its name.
-
-    Args:
-        model: Keras model instance
-        layer_name (str): Name of the layer to find (default is "output")
-
-    Returns:
-        int: Index of the layer in model.layers
-
-    Raises:
-        ValueError: If the layer with the given name is not found
-    """
-    for i, layer in enumerate(model.layers):
-        if layer.name == layer_name:
-            return i
-    raise ValueError(f"Layer {layer_name} not found in model")
-
-
-def replace_activation_with_linear(model, layer_idx):
-    """
-    Replace the activation function of a specified layer with a linear activation.
-
-    Args:
-        model: Keras model instance
-        layer_idx (int): Index of the layer whose activation will be replaced
-
-    Returns:
-        model: The modified Keras model with linear activation at specified layer
-    """
-    model.layers[layer_idx].activation = activations.linear
-    return model
-
-
-def visualize_saliency_for_filter(model, layer_idx, filter_idx=0, seed_input=None):
-    """
-    Generate and display a saliency map for a specific filter (class) in a given layer.
-
-    Args:
-        model: Keras model instance
-        layer_idx (int): Index of the target layer to visualize
-        filter_idx (int): Index of the filter (e.g., class) to visualize saliency for
-        seed_input: Preprocessed input image array (batch size 1) to use as seed
-
-    Returns:
-        None: Displays the saliency map using matplotlib
-    """
-    # Initialize the Saliency object with a model modifier to set linear activation on target layer
-    saliency = Saliency(
-        model,
-        model_modifier=lambda m: replace_activation_with_linear(m, layer_idx),
-        clone=True
-    )
-
-    # Define a loss function that isolates the output of the chosen filter
-    def loss(output):
-        return output[:, filter_idx]
-
-    # Compute the saliency map with smoothing for better visualization
-    saliency_map = saliency(
-        loss,
-        seed_input=seed_input,
-        smooth_samples=20,
-        smooth_noise=0.05
-    )
-
-    # Normalize the saliency map for display
-    saliency_map = normalize(saliency_map[0])
-
-    # Plot the saliency map using a heatmap color scheme
-    plt.imshow(saliency_map, cmap='jet')
-    plt.axis('off')
-    plt.title(f'Saliency map for filter {filter_idx} in layer {model.layers[layer_idx].name}')
-    plt.show()
-
-
-# --- Execution section ---
-
-# Select the first image from prediction paths (adjust index as needed)
-img_path = predict_image_paths[0]
-
-# Load and preprocess the image as done during prediction
-im = Image.open(img_path).convert('RGB')
-im_resized = im.resize((150, 150))
-im_array = img_to_array(im_resized) / 255.0
-seed_input = np.expand_dims(im_array, axis=0)
-
-# Find the index of the output layer by name (adjust the name as per your model)
-layer_idx = find_output_layer_index(model, layer_name="output")  # e.g. "dense1", "conv1", etc.
-
-# Predict to get the class filter index with the highest confidence
-pred = model.predict(seed_input)
-filter_idx = np.argmax(pred)
-
-print(f"Visualizing saliency map for predicted class index {filter_idx} with confidence {pred[0][filter_idx]*100:.2f}%")
-
-# Generate and show the saliency map for the selected filter
-visualize_saliency_for_filter(model, layer_idx, filter_idx=filter_idx, seed_input=seed_input)
