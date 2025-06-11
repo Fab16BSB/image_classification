@@ -123,7 +123,7 @@ La data augmentation est une technique essentielle pour améliorer la robustesse
 
 ---
 
-## ⚙️ Fonctionnement d'un réseau de neuronne de type CNN
+## ⚙️ Fonctionnement d'un réseau de neurone de type CNN
 
  Un **réseau de neurones convolutif (CNN)** est un type de réseau de neurones spécialement conçu pour traiter des données ayant une structure de grille, comme les images. Son efficacité réside dans sa capacité à apprendre automatiquement les caractéristiques (ou "features") pertinentes directement à partir des images, sans intervention humaine.
 
@@ -256,7 +256,7 @@ pip install -r requirements.txt
 
 ## 🧑‍💻 Authors
 
-- [Zeineb Ghrib]: A constitué le jeu de données Pokémon et a participé à la création du modèle CNN.
+- Zeineb Ghrib: A constitué le jeu de données Pokémon et a participé à la création du modèle CNN.
 
 ---
 
