@@ -261,7 +261,6 @@ pip install -r requirements.txt
 ---
 
 ## 📚 Sources
-📚 Sources
 Les données utilisées pour ce projet ont été recueillies à partir des plateformes suivantes, avec des spécificités pour chaque dataset :
 
 - Google Images: Utilisé pour le scraping du dataset Pokémon.
